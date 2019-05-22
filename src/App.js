@@ -1,26 +1,42 @@
-import React from 'react';
+import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+//Redux
+import { createStore, } from 'redux';
+import { Provider } from 'react-redux';
+
+import allReducers from './reducers'
+
+import AppContainer from './screens'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage' // or whatever storage you are using
+import { PersistGate } from 'redux-persist/es/integration/react';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  // whitelist: [                    
+  //   'accountReducer'
+  // ],
+  blacklist: [
+    // 'late'
+  ]
 }
 
-export default App;
+const persistedReducer = persistReducer(persistConfig, allReducers)
+
+let store = createStore(persistedReducer);
+let persistor = persistStore(store)
+
+export default class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <AppContainer />
+        </PersistGate>
+      </Provider>
+    );
+  }
+}
