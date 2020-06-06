@@ -1,12 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addPerson, removePerson } from '../actions/personAction';
+import { getProducts } from '../reducers/peopleReducer';
 import './index.css';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { inputValue: '', };
+  }
+
+  componentDidMount() {
+    this.props.getProducts()
   }
 
   addPerson() {
@@ -26,6 +30,7 @@ class App extends React.Component {
   }
 
   render() {
+    // console.log('render', this.props.people)
     return (
       <div className='main-container'>
         <div className='title'>People</div>
@@ -59,16 +64,14 @@ class App extends React.Component {
 
 
 function mapStateToProps(state) {
+
   return {
     people: state.people.people
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    dispatchAddPerson: (person) => dispatch(addPerson(person)),
-    dispatchDeletePerson: (person) => dispatch(removePerson(person))
-  }
-}
+const mapDispatchToProps = {
+  getProducts,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

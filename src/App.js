@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 //Redux
-import { createStore, } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import promiseMiddleware from 'redux-promise-middleware';
+import logger from './config/logger'
+import thunk from 'redux-thunk';
 
 import allReducers from './reducers'
 
@@ -26,7 +28,10 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, allReducers)
 
-let store = createStore(persistedReducer);
+export const store = createStore(
+  persistedReducer,
+  applyMiddleware(thunk, promiseMiddleware, logger)
+)
 let persistor = persistStore(store)
 
 export default class App extends Component {
