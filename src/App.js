@@ -3,8 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 
 //Redux
-import { createStore, } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 
 import allReducers from './reducers'
 
@@ -26,7 +27,10 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, allReducers)
 
-let store = createStore(persistedReducer);
+const store = createStore(
+  persistedReducer,
+  applyMiddleware(thunk)
+)
 let persistor = persistStore(store)
 
 export default class App extends Component {

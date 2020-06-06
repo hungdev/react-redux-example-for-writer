@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { addPerson, removePerson } from '../actions/personAction';
+import { addPerson, deletePerson, fetchFromAPI } from '../actions/personAction';
 import './index.css';
 
 class App extends React.Component {
@@ -9,15 +9,20 @@ class App extends React.Component {
     this.state = { inputValue: '', };
   }
 
+  componentDidMount() {
+    this.props.dispatchFetchFromAPI()
+  }
+
   addPerson() {
     if (this.state.inputValue === '') return;
     this.props.dispatchAddPerson({
       name: this.state.inputValue,
     });
     this.setState({ inputValue: '' });
+
+
   }
   deletePerson(person) {
-    console.log('person', person)
     this.props.dispatchDeletePerson(person)
   }
 
@@ -60,14 +65,16 @@ class App extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    people: state.people.people
+    people: state.people.people,
+    isFetching: state.people.isFetching,
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     dispatchAddPerson: (person) => dispatch(addPerson(person)),
-    dispatchDeletePerson: (person) => dispatch(removePerson(person))
+    dispatchdeletePerson: (person) => dispatch(deletePerson(person)),
+    dispatchFetchFromAPI: () => dispatch(fetchFromAPI()),
   }
 }
 
